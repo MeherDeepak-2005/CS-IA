@@ -3,7 +3,6 @@ import flask
 from werkzeug.utils import secure_filename
 from waitress import serve
 import mysql.connector
-from Search import Search
 from flask_cors import CORS, cross_origin, logging
 
 brochureUploadFilePath = './brochures'

@@ -29,44 +29,15 @@ if database:
 
 db = database.cursor()
 
+create_projects_table = "create table projectLists if not exists (id int not null AUTO_INCREMENT primary key, city char(40), name varchar(20) unique, image varchar(200) unique, brochure varchar(200) unique);"
+db.execute(create_projects_table)
 
-createTables = """
-create table projectLists IF NOT EXISTS (
-  id int NOT NULL AUTO_INCREMENT,
-  city char(40),
-  name varchar(20) UNIQUE,
-  image varchar(200) UNIQUE,
-  brochure varchar(200) UNIQUE,
-  PRIMARY KEY (id)
-);
+create_employee_table = "create table employee if not exists (id int not null AUTO_INCREMENT primary key, name char(20), mail char(30) not null UNIQUE, phone int(10) NOT NULL UNIQUE, designation char(20), password varchar(200) NOT NULL);"
+db.execute(create_employee_table)
 
-CREATE TABLE employee IF NOT EXISTS (
-  id int NOT NULL AUTO_INCREMENT primary key,
-  name char(20),
-  email char(30) NOT NULL UNIQUE,
-  phone int(10) NOT NULL UNIQUE,
-  designation char(20),
-  password varchar(200) NOT NULL
-);
+create_queries_table = "create table queries if not exists (id int not null AUTO_INCREMENT primary key, client_email char(20), client_name char(20), client_phone int(10) NOT NULL, description varchar(200) not null);"
+db.execute(create_queries_table)
 
-create table queries(
-  id int NOT NULL AUTO_INCREMENT primary key,
-  client_email varchar(30),
-  description varchar(200) NOT NULL,
-  client_name char(20),
-  client_phone int(10) NOT NULL
-);
-
-create table customers IF NOT EXISTS (
-  id int NOT NULL AUTO_INCREMENT primary key,
-  name char(20),
-  email varchar(30) NOT NULL UNIQUE,
-  password varchar(200) NOT NULL,
-  phone int(10) NOT NULL UNIQUE
-);
-"""
-
-db.execute(createTables, multi=True)
 db.close()
 
 

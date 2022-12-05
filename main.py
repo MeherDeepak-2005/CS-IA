@@ -16,24 +16,25 @@ cors = CORS(app)
 app.config['BROCHURE_FOLDER'] = brochureUploadFilePath
 app.config['IMAGE_FOLDER'] = imageUploadFilePath
 
-database = mysql.connector.connect(user='root', password='password',
+
+def newDb():
+    return mysql.connector.connect(user='root', password='password',
+                                       host='localhost', database='mysql')
+
+database =  mysql.connector.connect(user='root', password='password',
                                    host='localhost', database='mysql')
+
 if database:
     print('Connected to MySQL Server')
 
+db = database.cursor()
 
-db = database.cursor(buffered=True)
-# DROP table EMPLOYEE;
-# DROP table queries;
-# DROP table customers;
-# DROP table projectLists;
 
 createTables = """
 create table projectLists IF NOT EXISTS (
   id int NOT NULL AUTO_INCREMENT,
   city char(40),
   name varchar(20) UNIQUE,
-  gml varchar(200) UNIQUE,
   image varchar(200) UNIQUE,
   brochure varchar(200) UNIQUE,
   PRIMARY KEY (id)
@@ -48,10 +49,12 @@ CREATE TABLE employee IF NOT EXISTS (
   password varchar(200) NOT NULL
 );
 
-create table permissions IF NOT EXISTS (
-    id int NOT NULL AUTO_INCREMENT primary key,
-    email char references employee(email),
-    projectId int references projectLists(id)
+create table queries(
+  id int NOT NULL AUTO_INCREMENT primary key,
+  client_email varchar(30),
+  description varchar(200) NOT NULL,
+  client_name char(20),
+  client_phone int(10) NOT NULL
 );
 
 create table customers IF NOT EXISTS (
@@ -64,13 +67,7 @@ create table customers IF NOT EXISTS (
 """
 
 db.execute(createTables, multi=True)
-db.execute("""
-INSERT INTO projectLists (name, city, gml, image, brochure)
-VALUES
-    ('Meher Valley', 'Hyderabad', 'https://google.com/maps/mehervalley', 'http://127.0.0.1:5000/image/mehervalley', 'http://127.0.0.1:5000/brochure/mehervalley'),
-    ('Meher Enclave', 'Mumbai', 'https://google.com/maps/meherenlave', 'http:127.0.0.1:5000/image/meherenclave', 'http://127.0.0.1:5000/brochure/meherenclave'),
-    ('Meher NorthSide', 'pune', 'https://google.com/maps/mehernorthside', 'http://127.0.0.1:5000/image/mehernorthside', 'http://127.0.0.1:5000/brochure/mehernorthside');
-""")
+db.close()
 
 
 # SEARCH function
@@ -93,20 +90,34 @@ def search(query):
 def add(queryType):
     data = flask.request.json
     print(data)
+    addcursor = database.cursor(buffered=True)
     if queryType == 'project':
-        db.execute("INSERT into projectLists (name, city, gml, image, brochure) VALUES (%s, %s, %s, %s, %s)",
-                   (data['name'], data['city'], data['gml'], data['image'], data['brochure']))
+        addcursor.execute("INSERT into projectLists (name, city, image, brochure) VALUES (%s, %s, %s, %s)",
+                   (data['name'], data['city'], data['image'], data['brochure']))
+        database.commit()
+
+        print(addcursor.rowcount, 'record inserted')
+        addcursor.close()
+
+    if queryType == 'query':
+        addcursor.execute("INSERT into queries (client_email, description, client_name, client_phone) VALUES (%s, %s, %s, %s)", (data['client_email'], data['description'], data['client_name'], data['client_phone']))
+        database.commit()
+        print(addcursor.rowcount, 'record inserted')
+        addcursor.close()
 
     return flask.jsonify(data), 201
 
 @app.route('/fetch/<queryType>', methods=['GET'])
 @cross_origin()
 def fetch(queryType):
-    cursor = database.cursor(buffered=True)
+    database = newDb()
+    fetchcursor = database.cursor()
     if queryType == 'projects':
-        cursor.execute(
+        fetchcursor.execute(
             "SELECT * FROM projectLists")
-        return flask.jsonify(cursor.fetchall()), 200
+        data = fetchcursor.fetchall()
+        fetchcursor.close()
+        return flask.jsonify(data), 200
     if queryType == '':
         return 200
 
@@ -142,9 +153,7 @@ def upload_file():
     }), 201
 
 if __name__ == '__main__':
-    # serve(app, host='127.0.0.1', port=5000)
     app.secret_key = 'MxMx28xAxE'
     app.config['SESSION_TYPE'] = 'filesystem'
-    logging.getLogger('flask_cors').level = logging.DEBUG
+    serve(app, host='127.0.0.1', port=5000)
 
-    app.run(debug=True)

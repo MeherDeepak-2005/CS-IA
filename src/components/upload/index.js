@@ -3,19 +3,26 @@ import axios from 'axios';
 
 function Uploader() {
     const [name, setName] = useState();
-    const [image, setImage] = useState();
+    const [images, setImages] = useState([])
     const [brochure, setBrochure] = useState();
     const [city, setCity] = useState();
 
+    const formdata = new FormData();
+
+
+    const handleImageUpload = (e) => {
+        images.push(e.target.files[0].name);
+        formdata.append(e.target.files[0].name, e.target.files[0])
+        setImages([...images])
+    }
 
     const handleFile = async (e) => {
 
         e.preventDefault();
 
-        const formdata = new FormData();
-
-        formdata.append('brochure', brochure);
-        formdata.append('image', image)
+        console.log(formdata)
+        formdata.append('name', name)
+        formdata.append("city", city)
 
         const res = await fetch('http://127.0.0.1:5000/upload', {
             method: "POST",
@@ -23,24 +30,9 @@ function Uploader() {
         })
         let json = await res.json()
 
-        const imageUrl = json.image_downloadURL;
-        const brochureUrl = json.brochure_downloadURL;
+        console.log(json)
 
-        axios("http://127.0.0.1:5000/add/project", {
-            method: "POST",
-            data: {
-                "name": name,
-                "brochure": brochureUrl,
-                "image": imageUrl,
-                "city": city
-            }
-        }).then((res) => {
-            if (res.status == 201) {
-                // router.push("/")
-            } else {
-                alert("Something went wrong")
-            }
-        })
+
     }
     return (
         <>
@@ -61,20 +53,14 @@ function Uploader() {
                 </div>
 
                 <div className="">
-                    <label>Select image </label>
+                    <label>Images</label>
+                    <p>You can choose multiple images</p>
+                    <p>You have chosen {images.length} images</p>
                     <input required type="file" name="image"
-                        onChange={(e) => setImage(e.target.files[0])}
+                        onChange={(e) => handleImageUpload(e)}
                     />
                 </div>
 
-                <div>
-                    <label>
-                        Select Brochure
-                    </label>
-                    <input required type='file' name='brochure'
-                        onChange={(e) => setBrochure(e.target.files[0])}
-                    />
-                </div>
 
                 <button>Upload</button>
 

@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
+
 
 function App() {
 
   const [projects, setProjects] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios('http://127.0.0.1:5000/fetch/projects', {
@@ -26,24 +30,36 @@ function App() {
     <div className="App" >
       <nav style={{ display: 'flex', justifyContent: "space-around", position: 'sticky', top: '0', backgroundColor: 'white', zIndex: '100', padding: '10px' }}>
         <ol style={{ display: 'flex', flexDirection: 'row', width: 'fit-content' }}>
-          <ul style={{ marginRight: '15px' }}>
+          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
+            navigate("/")
+          }}>
             Home
           </ul>
-          <ul style={{ marginRight: '15px' }}>
+          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
+            navigate("/about")
+          }}>
             About us
           </ul>
-          <ul style={{ marginRight: '15px' }}>
+          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
+            navigate("/contact")
+          }}>
             Projects
           </ul>
-          <ul style={{ marginRight: '15px' }}>
+          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
+            navigate("/contact")
+          }}>
             Contact us
           </ul>
         </ol>
         <ol style={{ display: 'flex', flexDirection: 'row' }}>
-          <ul style={{ marginRight: '15px' }}>
+          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
+            navigate("/contact")
+          }}>
             Customer
           </ul>
-          <ul style={{ marginRight: '15px' }}>
+          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
+            navigate("/employee")
+          }}>
             Employee
           </ul>
         </ol>

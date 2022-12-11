@@ -1,13 +1,19 @@
 import { Heading, Text } from '@chakra-ui/react';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 function Employee() {
 
     const [queries, setQueries] = useState([]);
+    const [cookie, setCookie] = useCookies(['user']);
 
+    const navigate = useNavigate();
 
     useEffect(() => {
+
+        if (cookie.employeeLogin !== 'true') return navigate('/login/employee')
 
         axios('http://127.0.0.1:5000/fetch/queries')
             .then((res) => {

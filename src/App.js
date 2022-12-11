@@ -1,69 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import './App.css';
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
-
 
 function App() {
 
-  const [projects, setProjects] = useState([]);
-
-  const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios('http://127.0.0.1:5000/fetch/projects', {
-      method: "GET",
-      headers: {
-        'Accept': "application/json"
-      }
-    }).then((res) => {
-      if (res.status == 200) {
-        console.log(res.data)
-        setProjects(res.data)
-      } else {
-        alert("Data couldn't be fetched")
-      }
-    })
+    // get products from Backend REST API
+    const fetchproducts = () => {
+      axios('http://127.0.0.1:5000/get/products', {
+        method: "GET"
+      }).then((res) => {
+        if (res.status === 200) {
+          console.log(res.data)
+          setProducts(res.data)
+        } else {
+          alert("Data couldn't be fetched")
+        }
+      });
+    }
+    fetchproducts();
   }, [])
 
   return (
     <div className="App" >
-      <nav style={{ display: 'flex', justifyContent: "space-around", position: 'sticky', top: '0', backgroundColor: 'white', zIndex: '100', padding: '10px' }}>
-        <ol style={{ display: 'flex', flexDirection: 'row', width: 'fit-content' }}>
-          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-            navigate("/")
-          }}>
-            Home
-          </ul>
-          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-            navigate("/about")
-          }}>
-            About us
-          </ul>
-          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-            navigate("/contact")
-          }}>
-            Projects
-          </ul>
-          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-            navigate("/contact")
-          }}>
-            Contact us
-          </ul>
-        </ol>
-        <ol style={{ display: 'flex', flexDirection: 'row' }}>
-          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-            navigate("/contact")
-          }}>
-            Customer
-          </ul>
-          <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-            navigate("/employee")
-          }}>
-            Employee
-          </ul>
-        </ol>
-      </nav>
       <div style={{
         height: '50vh', display: "flex", alignItems: "center",
         backgroundPosition: "center",
@@ -78,23 +39,23 @@ function App() {
 
       <div style={{ display: 'flex', flexDirection: "column", width: 'fit-content', margin: 'auto', padding: '1em', paddingTop: '0' }}>
         <h2 style={{ textAlign: "center", fontFamily: 'Fira Sans', fontSize: '35px' }}>
-          Our Projects
+          Our Products
         </h2>
         <button style={{ background: "#FAF089", border: 'none', padding: '10px' }}>
           Know more &rarr;
         </button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: "row", justifyContent: "space-evenly", flexWrap: "wrap" }}>
+      <div style={{ display: 'flex', flexDirection: "row", justifyContent: "space-evenly", flexWrap: "wrap", flexBasis: "150px" }}>
         {
-          projects.map(project => (
-            <div key={project[0]} style={{ padding: "1em", textAlign: "center", backgroundColor: "whitesmoke", width: "fit-content" }}>
-              <h1 style={{ fontFamily: "cursive", fontWeight: "200", fontSize: '30px' }}>{project[2]}</h1>
-              <h3 style={{ fontWeight: "400" }}>{project[1]}</h3>
+          products.map(product => (
+            <div key={product[0]} style={{ padding: "1em", textAlign: "center", backgroundColor: "whitesmoke", width: "fit-content", margin: '10px' }}>
+              <h1 style={{ fontFamily: "cursive", fontWeight: "200", fontSize: '30px' }}>{product[1]}</h1>
+              <h3 style={{ fontWeight: "400" }}>{product[2]}</h3>
               <div style={{ 'overflow': 'hidden', 'width': '20rem', height: "15rem", display: 'flex', alignItems: "center", justifyContent: "center" }}>
-                <img style={{ 'height': '10rem', 'position': 'absolute', zIndex: '0', width: "20rem", height: "12rem" }} src={project[4]} />
-                <a target='_blank' href={project[5]} style={{ 'zIndex': '1', margin: 'auto' }}>
-                  <button style={{ background: "#FAF089", border: 'none', padding: '0.5em', borderRadius: '10px' }}>View Brochure</button>
+                <img style={{ 'position': 'absolute', zIndex: '0', width: "20rem", height: "12rem" }} src={`http://127.0.0.1:5000/${product[3]}`} alt='product photos' />
+                <a target='_blank' rel='noreferrer' href={`/products/${product[0]}`} style={{ 'zIndex': '1', margin: 'auto' }}>
+                  <button style={{ background: "#FAF089", border: 'none', padding: '0.5em', borderRadius: '10px' }}>More Information</button>
                 </a>
               </div>
             </div>

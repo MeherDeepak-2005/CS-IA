@@ -9,7 +9,6 @@ import {
     InputGroup,
     InputLeftElement,
     Textarea,
-    useClipboard,
     useColorModeValue,
     VStack,
 } from '@chakra-ui/react';

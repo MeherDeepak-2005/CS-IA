@@ -17,6 +17,7 @@ import Login from './components/authentication/Login';
 import Signup from './components/authentication/Signup';
 import Nav from './components/Nav';
 import Product from './components/products/product';
+import Products from './components/products';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,12 @@ const router = createBrowserRouter([
     element: <>
       <Nav />
       <Product />
+    </>
+  }, {
+    path: "/products",
+    element: <>
+      <Nav />
+      <Products />
     </>
   }
 ]);

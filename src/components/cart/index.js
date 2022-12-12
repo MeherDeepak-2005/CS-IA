@@ -18,6 +18,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import { FaArrowRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'
 
 
 function Card({ productId, name, image, price }) {
@@ -31,6 +32,7 @@ function Card({ productId, name, image, price }) {
     localStorage.setItem("totalPrice", parseInt(currentPrice) + (quantity * price));
 
     console.log(currentPrice)
+
 
     const removeItem = () => {
         axios(`http://127.0.0.1:5000/delete/cart/${productId}`, {
@@ -116,6 +118,7 @@ export default function Cart() {
         return res;
     }
 
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -182,7 +185,7 @@ export default function Cart() {
                                 </Text>
                             </Flex>
                         </Stack>
-                        <Button colorScheme="blue" size="lg" fontSize="md" rightIcon={<FaArrowRight />}>
+                        <Button onClick={() => { navigate("/") }} colorScheme="blue" size="lg" fontSize="md" rightIcon={<FaArrowRight />}>
                             Checkout
                         </Button>
                     </Stack>

@@ -21,9 +21,9 @@ function Nav() {
                     About us
                 </ul>
                 <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
-                    navigate("/contact")
+                    navigate("/products")
                 }}>
-                    products
+                    Products
                 </ul>
                 <ul style={{ marginRight: '15px', cursor: 'pointer' }} onClick={() => {
                     navigate("/contact")

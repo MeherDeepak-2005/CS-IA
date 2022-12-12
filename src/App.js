@@ -29,7 +29,7 @@ function App() {
         height: '50vh', display: "flex", alignItems: "center",
         backgroundPosition: "center",
         backgroundSize: 'cover',
-        backgroundImage: "url(https://cdn.discordapp.com/attachments/903863587343314975/1048934034723569664/Modified-Elevation_mutthangi.jpg)"
+        backgroundImage: "url(https://raw.githubusercontent.com/MeherDeepak-2005/CS-IA/main/ppm-2.png)"
       }}>
 
         <h1 style={{ textAlign: 'center', margin: 'auto', color: "#353333", backgroundColor: "whitesmoke", opacity: '0.8', fontSize: "48px", textTransform: 'uppercase', fontFamily: "Fira Sans" }}>
@@ -59,7 +59,6 @@ function App() {
                 </a>
               </div>
             </div>
-
           ))
         }
       </div>
